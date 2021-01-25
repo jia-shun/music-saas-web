@@ -7,7 +7,6 @@
 					<div class="bform">
 						<input type="username" placeholder="用户名" v-model="form.username">
 						<input type="password" placeholder="密码" v-model="form.password">
-						<span class="errTips" v-if="passwordError">* 密码填写错误 *</span>
 					</div>
 					<button class="bbutton" @click="login">登录</button>
 				</div>
@@ -15,9 +14,9 @@
 					<div class="btitle">创建账户</div>
 					<div class="bform">
 						<input type="text" placeholder="用户名" v-model="form.username">
-						<span class="errTips" v-if="existed">* 用户名已经存在！ *</span>
-						<input type="email" placeholder="邮箱" v-model="form.email">
 						<input type="password" placeholder="密码" v-model="form.password">
+						<input type="phone" placeholder="手机号" v-model="form.phone">
+						<input type="email" placeholder="邮箱" v-model="form.email">
 					</div>
 					<button class="bbutton" @click="register">注册</button>
 				</div>
@@ -25,7 +24,7 @@
 			<div class="small-box" :class="{active:isLogin}">
 				<div class="small-contain" v-if="isLogin">
 					<div class="stitle">你好，朋友!</div>
-					<p class="scontent">开始注册，和我们一起管理你的音乐</p>
+					<p class="scontent">开始管理你制作的音乐</p>
 					<button class="sbutton" @click="changeType">注册</button>
 				</div>
 				<div class="small-contain" v-else>
@@ -39,7 +38,6 @@
 </template>
 
 <script>
-import { login } from '../api/index'
 	export default{
 		name:'login-register',
 		data(){
@@ -64,29 +62,38 @@ import { login } from '../api/index'
 			},
 			login() {
 				const self = this;
-				if (self.form.username != "" && self.form.password != "") {
-					login(self.form)
-					.then(res => {
-						console.log("result: " + JSON.stringify(res))
-						alert("登录成功！");
-					}).catch(err => { 
-						alert(err.data.message);
+				if (self.form.username == "" || self.form.password == "") {
+					this.$msg.notify({
+					content: "username and password can not be empty",
+					type: 'error',
 					})
-				} else{
-					alert("填写不能为空！");
+				} else {
+          this.$store.dispatch('user/login', self.form).then(() => {
+            this.$router.push({ path: this.redirect || '/' })
+          }).catch(err => {
+            this.$msg.notify({
+						content: err.data.message,
+						type: 'error',
+						})
+          })
 				}
 			},
 			register(){
 				const self = this;
-				if(self.form.username != "" && self.form.email != "" && self.form.password != ""){
-					this.$store.dispatch('user/register', self.form)
-					.then(() => { 
-						this.$router.push({ path: this.redirect || '/' })
-						})
-					.catch(err => { console.log(err);
+				if (self.form.username == "" || self.form.password == "") {
+					this.$msg.notify({
+					content: "username and password can not be empty",
+					type: 'error',
 					})
 				} else {
-					alert("填写不能为空！");
+          this.$store.dispatch('user/register', self.form).then(() => {
+            this.$router.push({ path: this.redirect || '/' })
+          }).catch(err => {
+            this.$msg.notify({
+						content: err.data.message,
+						type: 'error',
+						})
+          })
 				}
 			}
 		}
