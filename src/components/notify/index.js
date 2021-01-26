@@ -1,16 +1,16 @@
 import vue from 'vue'
 import myNotify from './notify'
- 
+
 // 创建vue组件实例
-const notify = vue.extend(myNotify);
- 
-//添加通知节点(用来存放通知的元素)
-let notifyWrap = document.createElement('div');
-notifyWrap.className = "notify-wrap"
-notifyWrap.style = "position: fixed; right: 0px; top: 90px; transition-duration: .5s;"
-document.body.appendChild(notifyWrap);
- 
-let msg = {
+const Notify = vue.extend(myNotify)
+
+// 添加通知节点(用来存放通知的元素)
+const notifyWrap = document.createElement('div')
+notifyWrap.className = 'notify-wrap'
+notifyWrap.style = 'position: fixed; right: 0px; top: 90px; transition-duration: .5s;'
+document.body.appendChild(notifyWrap)
+
+const msg = {
   /**
    * 通知框
    * @content 提示内容;
@@ -18,52 +18,51 @@ let msg = {
    * @time 显示时长
    */
   notify: ({
-    content, 
-    type, 
-    time = 1500,
+    content,
+    type,
+    time = 1500
   }) => {
-    //创建一个存放通知的div
-    const notifyDom = new notify({
+    // 创建一个存放通知的div
+    const notifyDom = new Notify({
       el: document.createElement('div'),
-      data () {
+      data() {
         return {
           notifyFlag: true, // 是否显示
-          time: time,//取消按钮是否显示
+          time: time, // 取消按钮是否显示
           content: content, // 文本内容
           type: type, // 类型
           timer: '',
-          timeFlag: false,
+          timeFlag: false
         }
       },
-      watch:{
-        timeFlag(){
-          if(this.timeFlag){
-            this.notifyFlag = false;
-            window.clearTimeout(this.timer); 
+      watch: {
+        timeFlag() {
+          if (this.timeFlag) {
+            this.notifyFlag = false
+            window.clearTimeout(this.timer)
           }
         }
       },
-      created(){
-        this.timer = setTimeout(() => { 
-          this.timeFlag = true;
-        }, this.time);
-         
+      created() {
+        this.timer = setTimeout(() => {
+          this.timeFlag = true
+        }, this.time)
       },
-      beforeDestroy(){
-        window.clearTimeout(this.timer); 
+      beforeDestroy() {
+        window.clearTimeout(this.timer)
       }
     })
-    
-    //往notifyWrap里面添加通知
-    notifyWrap.appendChild(notifyDom.$el);
+
+    // 往notifyWrap里面添加通知
+    notifyWrap.appendChild(notifyDom.$el)
   }
 }
- 
-//注册
-function register(){
+
+// 注册
+function register() {
   vue.prototype.$msg = msg
 }
- 
+
 export default {
   msg,
   register

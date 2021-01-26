@@ -1,28 +1,27 @@
 <template>
   <transition name="slide-fade">
-    <div class="my-notify" v-if="notifyFlag">
-      <div class="notify success" v-if="type=='success'">
+    <div v-if="notifyFlag" class="my-notify">
+      <div v-if="type=='success'" class="notify success">
         <div class="tip">
           <span>success</span>
         </div>
-        <div class="content"> {{content}}</div>
+        <div class="content"> {{ content }}</div>
       </div>
-      <div class="notify error" v-else-if="type=='error'">
+      <div v-else-if="type=='error'" class="notify error">
         <div class="tip">
           <span>error</span>
         </div>
-        <div class="content">{{content}}</div>
+        <div class="content">{{ content }}</div>
       </div>
-      <div class="notify warning" v-else-if="type=='warning'">
+      <div v-else-if="type=='warning'" class="notify warning">
         <div class="tip">
           <span>warning</span>
         </div>
-        <div class="content">{{content}}</div>
+        <div class="content">{{ content }}</div>
       </div>
     </div>
   </transition>
 </template>
-
 
 <style scoped>
 .slide-fade-leave-active {
@@ -33,7 +32,7 @@
   opacity: 0;
 }
 .notify-wrap{
-  
+
   background-color: #1AFA29;
 }
 .my-notify{

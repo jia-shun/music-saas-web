@@ -1,103 +1,103 @@
 <template>
-	<div class="login-register">
-		<div class="contain">
-			<div class="big-box" :class="{active:isLogin}">
-				<div class="big-contain" v-if="isLogin">
-					<div class="btitle">账户登录</div>
-					<div class="bform">
-						<input type="username" placeholder="用户名" v-model="form.username">
-						<input type="password" placeholder="密码" v-model="form.password">
-					</div>
-					<button class="bbutton" @click="login">登录</button>
-				</div>
-				<div class="big-contain" v-else>
-					<div class="btitle">创建账户</div>
-					<div class="bform">
-						<input type="text" placeholder="用户名" v-model="form.username">
-						<input type="password" placeholder="密码" v-model="form.password">
-						<input type="phone" placeholder="手机号" v-model="form.phone">
-						<input type="email" placeholder="邮箱" v-model="form.email">
-					</div>
-					<button class="bbutton" @click="register">注册</button>
-				</div>
-			</div>
-			<div class="small-box" :class="{active:isLogin}">
-				<div class="small-contain" v-if="isLogin">
-					<div class="stitle">你好，朋友!</div>
-					<p class="scontent">开始管理你制作的音乐</p>
-					<button class="sbutton" @click="changeType">注册</button>
-				</div>
-				<div class="small-contain" v-else>
-					<div class="stitle">欢迎回来!</div>
-					<p class="scontent">请登录你的账户</p>
-					<button class="sbutton" @click="changeType">登录</button>
-				</div>
-			</div>
-		</div>
-	</div>
+  <div class="login-register">
+    <div class="contain">
+      <div class="big-box" :class="{active:isLogin}">
+        <div v-if="isLogin" class="big-contain">
+          <div class="btitle">账户登录</div>
+          <div class="bform">
+            <input v-model="form.username" type="username" placeholder="用户名">
+            <input v-model="form.password" type="password" placeholder="密码">
+          </div>
+          <button class="bbutton" @click="login">登录</button>
+        </div>
+        <div v-else class="big-contain">
+          <div class="btitle">创建账户</div>
+          <div class="bform">
+            <input v-model="form.username" type="text" placeholder="用户名">
+            <input v-model="form.password" type="password" placeholder="密码">
+            <input v-model="form.phone" type="phone" placeholder="手机号">
+            <input v-model="form.email" type="email" placeholder="邮箱">
+          </div>
+          <button class="bbutton" @click="register">注册</button>
+        </div>
+      </div>
+      <div class="small-box" :class="{active:isLogin}">
+        <div v-if="isLogin" class="small-contain">
+          <div class="stitle">你好，朋友!</div>
+          <p class="scontent">开始管理你制作的音乐</p>
+          <button class="sbutton" @click="changeType">注册</button>
+        </div>
+        <div v-else class="small-contain">
+          <div class="stitle">欢迎回来!</div>
+          <p class="scontent">请登录你的账户</p>
+          <button class="sbutton" @click="changeType">登录</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-	export default{
-		name:'login-register',
-		data(){
-			return {
-				isLogin:true,
-				emailError: false,
-				passwordError: false,
-				existed: false,
-				form:{
-					username:'',
-					email:'',
-					password:''
-				}
-			}
-		},
-		methods:{
-			changeType() {
-				this.isLogin = !this.isLogin
-				this.form.username = ''
-				this.form.email = ''
-				this.form.password = ''
-			},
-			login() {
-				const self = this;
-				if (self.form.username == "" || self.form.password == "") {
-					this.$msg.notify({
-					content: "username and password can not be empty",
-					type: 'error',
-					})
-				} else {
-          this.$store.dispatch('user/login', self.form).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-          }).catch(err => {
-            this.$msg.notify({
-						content: err.data.message,
-						type: 'error',
-						})
+export default {
+  name: 'LoginRegister',
+  data() {
+    return {
+      isLogin: true,
+      emailError: false,
+      passwordError: false,
+      existed: false,
+      form: {
+        username: '',
+        email: '',
+        password: ''
+      }
+    }
+  },
+  methods: {
+    changeType() {
+      this.isLogin = !this.isLogin
+      this.form.username = ''
+      this.form.email = ''
+      this.form.password = ''
+    },
+    login() {
+      const self = this
+      if (self.form.username === '' || self.form.password === '') {
+        this.$msg.notify({
+          content: 'username and password can not be empty',
+          type: 'error'
+        })
+      } else {
+        this.$store.dispatch('user/login', self.form).then(() => {
+          this.$router.push({ path: this.redirect || '/' })
+        }).catch(err => {
+          this.$msg.notify({
+            content: err.data.message,
+            type: 'error'
           })
-				}
-			},
-			register(){
-				const self = this;
-				if (self.form.username == "" || self.form.password == "") {
-					this.$msg.notify({
-					content: "username and password can not be empty",
-					type: 'error',
-					})
-				} else {
-          this.$store.dispatch('user/register', self.form).then(() => {
-            this.$router.push({ path: this.redirect || '/' })
-          }).catch(err => {
-            this.$msg.notify({
-						content: err.data.message,
-						type: 'error',
-						})
+        })
+      }
+    },
+    register() {
+      const self = this
+      if (self.form.username === '' || self.form.password === '') {
+        this.$msg.notify({
+          content: 'username and password can not be empty',
+          type: 'error'
+        })
+      } else {
+        this.$store.dispatch('user/register', self.form).then(() => {
+          this.$router.push({ path: this.redirect || '/' })
+        }).catch(err => {
+          this.$msg.notify({
+            content: err.data.message,
+            type: 'error'
           })
-				}
-			}
-		}
-	}
+        })
+      }
+    }
+  }
+}
 </script>
 
 <style scoped="scoped">
@@ -220,7 +220,7 @@
 		font-size: 0.9em;
 		cursor: pointer;
 	}
-	
+
 	.big-box.active{
 		left: 0;
 		transition: all 0.5s;

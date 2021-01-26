@@ -16,7 +16,6 @@ export function register(data) {
   })
 }
 
-
 export function getInfo(token) {
   return request({
     url: '/vue-admin-template/user/info',
