@@ -24,8 +24,8 @@ export default {
   },
   data() {
     return {
-      title: 'Vue Admin Template',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      title: 'Cool Music',
+      logo: 'https://cool-music-1257890402.cos.ap-nanjing.myqcloud.com/content/cool-music-logo.png'
     }
   }
 }
