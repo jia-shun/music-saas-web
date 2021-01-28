@@ -35,8 +35,6 @@ const actions = {
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
-        commit('SET_NAME', data.user.username)
-        commit('SET_AVATAR', data.user.avatar)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -56,7 +54,6 @@ const actions = {
         }
 
         const { name, avatar } = data
-
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         resolve(data)

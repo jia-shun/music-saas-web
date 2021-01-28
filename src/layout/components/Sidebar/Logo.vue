@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: 'Cool Music',
+      title: 'Cool',
       logo: 'https://cool-music-1257890402.cos.ap-nanjing.myqcloud.com/content/cool-music-logo.png'
     }
   }

@@ -26,14 +26,18 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done()
     } else {
       const hasGetUserInfo = store.getters.name
-      console.log('name cache: ' + store.getters.name)
       if (hasGetUserInfo) {
         next()
       } else {
-        // remove token and go to login page to re-login
-        await store.dispatch('user/resetToken')
-        next(`/login?redirect=${to.path}`)
-        NProgress.done()
+        try {
+          await store.dispatch('user/getInfo')
+          next()
+        } catch (error) {
+          // remove token and go to login page to re-login
+          await store.dispatch('user/resetToken')
+          next(`/login?redirect=${to.path}`)
+          NProgress.done()
+        }
       }
     }
   } else {
