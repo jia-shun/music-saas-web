@@ -1,14 +1,10 @@
 import request from '@/utils/request'
 
-export function get() {
-  const params = {
-    page: 0,
-    pageSize: 20
-  }
+export function get(data) {
   return request({
-    url: 'music',
-    method: 'get',
-    params
+    url: 'music/list',
+    method: 'post',
+    data
   })
 }
 
@@ -31,7 +27,7 @@ export function add(data) {
 export function del(id) {
   return request({
     url: 'music',
-    method: 'delete',
+    method: 'post',
     data: id
   })
 }
@@ -39,9 +35,9 @@ export function del(id) {
 export function edit(data) {
   return request({
     url: 'music',
-    method: 'put',
+    method: 'post',
     data
   })
 }
 
-export default { getById, add, edit, del }
+export default { get, getById, add, edit, del }
