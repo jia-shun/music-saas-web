@@ -39,6 +39,7 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.finishStatus"
+              @change="finishStateChaned(scope.row)"
             />
           </template>
         </el-table-column>
@@ -52,15 +53,31 @@
         />
         <el-table-column
           label="操作"
-        />
+        >
+          <template slot-scope="scope">
+
+            <el-button type="primary" icon="el-icon-edit" size="mini" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" />
+          </template>
+        </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <el-pagination
+        :current-page="queryInfo.page"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="queryInfo.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </el-card>
   </div>
 
 </template>
 
 <script>
-import { get } from '@/api/music'
+import { get, edit } from '@/api/music'
 export default {
   data() {
     return {
@@ -68,8 +85,9 @@ export default {
       total: 0,
       // 获取音乐列表
       queryInfo: {
+        // 当前页数
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         keyword: ''
       }
     }
@@ -83,6 +101,23 @@ export default {
       this.musics = res.list
       this.total = res.total
       console.log('res :' + JSON.stringify(res))
+    },
+    // 监听pageSize
+    handleSizeChange(pageSize) {
+      this.queryInfo.pageSize = pageSize
+      this.get()
+    },
+    // 监听page
+    handleCurrentChange(page) {
+      this.queryInfo.page = page
+      this.get()
+    },
+    finishStateChaned(music) {
+      edit(music)
+      this.$msg.notify({
+        content: '更新完成状态成功',
+        type: 'success'
+      })
     }
   }
 
@@ -92,6 +127,12 @@ export default {
 <style scoped>
 .el-table {
     margin-top: 30px;
+}
+
+.el-pagination {
+    margin-top: 30px;
+    float: right;
+    margin-right: 50px;
 }
 
 </style>
