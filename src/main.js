@@ -15,8 +15,8 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 
-import message from '@/components/Notify/index'
-Vue.use(message.register)
+import notfiy from '@/components/Notify/index'
+Vue.use(notfiy.register)
 
 /**
  * If you don't want to use mock-server

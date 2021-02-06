@@ -40,4 +40,12 @@ export function edit(data) {
   })
 }
 
-export default { get, getById, add, edit, del }
+export function editStatus(data) {
+  return request({
+    url: 'music/update-status',
+    method: 'post',
+    data
+  })
+}
+
+export default { get, getById, add, edit, del, editStatus }
