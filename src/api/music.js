@@ -10,9 +10,8 @@ export function get(data) {
 
 export function getById(id) {
   return request({
-    url: 'music/id',
-    method: 'post',
-    data: id
+    url: 'music/' + id,
+    method: 'get'
   })
 }
 

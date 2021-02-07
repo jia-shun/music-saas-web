@@ -51,8 +51,8 @@
         <el-table-column
           label="操作"
         >
-          <template>
-            <el-button type="primary" icon="el-icon-edit" size="mini" />
+          <template slot-scope="scope">
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)" />
             <el-button type="danger" icon="el-icon-delete" size="mini" />
           </template>
         </el-table-column>
@@ -117,12 +117,60 @@
       </span>
     </el-dialog>
 
+    <!--- 修改音乐 --->
+    <el-dialog
+      title="编辑音乐"
+      :visible.sync="editDialogVisible"
+      width="30%"
+    >
+      <!---  修改弹窗主题 --->
+      <el-form ref="editMusicRef" :model="editMusic" :rules="editMusicRules" label-width="80px">
+        <el-form-item label="音乐名称">
+          <el-input v-model="editMusic.musicName" />
+        </el-form-item>
+        <el-form-item label="客户姓名" prop="customerName">
+          <el-input v-model="editMusic.customerName" />
+        </el-form-item>
+        <el-form-item label="制作费用" prop="price">
+          <el-input v-model.number="editMusic.price" />
+        </el-form-item>
+        <el-form-item label="制作周期">
+          <el-col :span="11">
+            <el-date-picker
+              v-model="editMusic.beganAt"
+              type="datetime"
+              placeholder="接手时间"
+              style="width: 100%;"
+            />
+          </el-col>
+          <el-col class="line" :span="2"> - </el-col>
+          <el-col :span="11">
+            <el-date-picker
+              v-model="editMusic.finishedAt"
+              type="datetime"
+              placeholder="完成时间"
+              style="width: 100%;"
+            />
+          </el-col>
+        </el-form-item>
+        <el-form-item label="完成状态" prop="finishStatus">
+          <el-switch v-model="addMusic.finishStatus" />
+        </el-form-item>
+      </el-form>
+
+      <!--- 添加弹窗底部 --->
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" edit-dialog-visible="false&quot;@click=&quot;&quot;">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 
 </template>
 
 <script>
-import { get, add, editStatus } from '@/api/music'
+import { get, add, editStatus, getById } from '@/api/music'
 export default {
   data() {
     var checkPrice = (rule, value, callback) => {
@@ -136,6 +184,27 @@ export default {
       musics: [],
       total: 0,
       addDialogVisible: false,
+      editDialogVisible: false,
+      editMusic: {
+        musicName: '',
+        customerName: '',
+        price: '',
+        beganAt: '',
+        finishedAt: '',
+        finishStatus: false
+      },
+      editMusicRules: {
+        musicName: [
+          { required: true, message: '请输入音乐名字', trigger: 'blur' }
+        ],
+        customerName: [
+          { required: true, message: '请输入客户姓名', trigger: 'blur' }
+        ],
+        price: [
+          { required: true, message: '请输入制作费用', trigger: 'blur' },
+          { validator: checkPrice, trigger: 'blur' }
+        ]
+      },
       // 获取音乐列表
       queryInfo: {
         // 当前页数
@@ -243,6 +312,11 @@ export default {
           })
         })
       })
+    },
+    async showEditDialog(id) {
+      const { data: res } = await getById(id)
+      this.editMusic = res
+      this.editDialogVisible = true
     }
   }
 
