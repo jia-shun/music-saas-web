@@ -125,7 +125,7 @@
     >
       <!---  修改弹窗主题 --->
       <el-form ref="editMusicRef" :model="editMusic" :rules="editMusicRules" label-width="80px">
-        <el-form-item label="音乐名称">
+        <el-form-item label="音乐名称" prop="musicName">
           <el-input v-model="editMusic.musicName" />
         </el-form-item>
         <el-form-item label="客户姓名" prop="customerName">
@@ -154,14 +154,14 @@
           </el-col>
         </el-form-item>
         <el-form-item label="完成状态" prop="finishStatus">
-          <el-switch v-model="addMusic.finishStatus" />
+          <el-switch v-model="editMusic.finishStatus" />
         </el-form-item>
       </el-form>
 
       <!--- 添加弹窗底部 --->
       <span slot="footer" class="dialog-footer">
         <el-button @click="editDialogVisible = false">取 消</el-button>
-        <el-button type="primary" edit-dialog-visible="false&quot;@click=&quot;&quot;">确 定</el-button>
+        <el-button type="primary" @click="editMusicForm">确 定</el-button>
       </span>
     </el-dialog>
 
@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import { get, add, editStatus, getById } from '@/api/music'
+import { get, add, editStatus, getById, edit } from '@/api/music'
 export default {
   data() {
     var checkPrice = (rule, value, callback) => {
@@ -313,6 +313,42 @@ export default {
         })
       })
     },
+
+    // 编辑音乐
+    editMusicForm() {
+      this.$refs.editMusicRef.validate((valid) => {
+        if (!valid) return
+        if (!this.editMusic.beganAt || this.editMusic.beganAt === '') {
+          this.$msg.notify({
+            content: '接手时间不能为空',
+            type: 'warning'
+          })
+          return
+        }
+        if (!this.editMusic.finishedAt || this.editMusic.finishedAt === '') {
+          this.$msg.notify({
+            content: '完成时间不能为空',
+            type: 'warning'
+          })
+          return
+        }
+        this.editMusic.price = parseInt(this.editMusic.price)
+        edit(this.editMusic).then(res => {
+          this.editDialogVisible = false
+          this.get()
+          this.$msg.notify({
+            content: '编辑音乐成功',
+            type: 'success'
+          })
+        }).catch(err => {
+          this.$msg.notify({
+            content: err.message,
+            type: 'error'
+          })
+        })
+      })
+    },
+
     async showEditDialog(id) {
       const { data: res } = await getById(id)
       this.editMusic = res
