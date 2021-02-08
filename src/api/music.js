@@ -17,7 +17,7 @@ export function getById(id) {
 
 export function add(data) {
   return request({
-    url: 'music/create',
+    url: 'music',
     method: 'post',
     data
   })
@@ -25,24 +25,23 @@ export function add(data) {
 
 export function del(id) {
   return request({
-    url: 'music/delete',
-    method: 'post',
-    data: id
+    url: 'music/' + id,
+    method: 'delete'
   })
 }
 
 export function edit(data) {
   return request({
-    url: 'music/update',
-    method: 'post',
+    url: 'music',
+    method: 'put',
     data
   })
 }
 
 export function editStatus(data) {
   return request({
-    url: 'music/update-status',
-    method: 'post',
+    url: 'music/status',
+    method: 'put',
     data
   })
 }

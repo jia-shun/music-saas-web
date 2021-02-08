@@ -4,7 +4,7 @@
       <!-- 搜索与添加区域 -->
 
       <el-row :gutter="20">
-        <el-col :span="4">
+        <el-col :span="8">
           <el-input v-model="queryInfo.keyword" placeholder="请输入音乐或客户名字" clearable @clear="get">
             <el-button slot="append" icon="el-icon-search" @click="get" />
           </el-input>
@@ -53,7 +53,7 @@
         >
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.id)" />
-            <el-button type="danger" icon="el-icon-delete" size="mini" />
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteMusic(scope.row)" />
           </template>
         </el-table-column>
       </el-table>
@@ -170,7 +170,7 @@
 </template>
 
 <script>
-import { get, add, editStatus, getById, edit } from '@/api/music'
+import { get, add, editStatus, getById, edit, del } from '@/api/music'
 export default {
   data() {
     var checkPrice = (rule, value, callback) => {
@@ -242,6 +242,22 @@ export default {
       const { data: res } = await get(this.queryInfo)
       this.musics = res.list
       this.total = res.total
+    },
+    // 删除音乐
+    deleteMusic(data) {
+      this.$confirm('确定要删除音乐《 ' + data.musicName + ' 》？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        del(data.id).then(res => {
+          this.$msg.notify({
+            content: '删除成功',
+            type: 'success'
+          })
+          this.get()
+        })
+      })
     },
     // 改变状态
     changeEnabled(data, val) {
