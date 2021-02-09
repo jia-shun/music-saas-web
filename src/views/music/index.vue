@@ -4,7 +4,7 @@
       <!-- 搜索与添加区域 -->
 
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="5">
           <el-input v-model="queryInfo.keyword" placeholder="请输入音乐或客户名字" clearable @clear="get">
             <el-button slot="append" icon="el-icon-search" @click="get" />
           </el-input>
