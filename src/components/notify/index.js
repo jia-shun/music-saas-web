@@ -20,7 +20,7 @@ const msg = {
   notify: ({
     content,
     type,
-    time = 1500
+    time = 2 * 1000
   }) => {
     // 创建一个存放通知的div
     const notifyDom = new Notify({

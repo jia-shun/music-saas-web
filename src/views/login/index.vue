@@ -67,7 +67,7 @@ export default {
       const self = this
       if (self.form.username === '' || self.form.password === '') {
         this.$msg.notify({
-          content: 'username and password can not be empty',
+          content: '用户名和密码不能为空',
           type: 'error'
         })
       } else {
@@ -75,7 +75,7 @@ export default {
           this.$router.push({ path: this.redirect || '/' })
         }).catch(err => {
           this.$msg.notify({
-            content: err.data.message,
+            content: err,
             type: 'error'
           })
         })
@@ -85,15 +85,19 @@ export default {
       const self = this
       if (self.form.username === '' || self.form.password === '') {
         this.$msg.notify({
-          content: 'username and password can not be empty',
+          content: '用户名和密码不能为空',
           type: 'error'
         })
       } else {
         this.$store.dispatch('user/register', self.form).then(() => {
-          this.$router.push({ path: this.redirect || '/' })
+          this.$msg.notify({
+            content: '注册成功，请登录',
+            type: 'success'
+          })
+          this.isLogin = !this.isLogin
         }).catch(err => {
           this.$msg.notify({
-            content: err.data.message,
+            content: err,
             type: 'error'
           })
         })

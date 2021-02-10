@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { MessageBox } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
@@ -21,7 +20,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log(error) // for debug
+    console.log('request err:' + error) // for debug
     return Promise.reject(error)
   }
 )
@@ -31,23 +30,18 @@ service.interceptors.response.use(
 
   response => {
     const res = response.data
+    console.log('result: ' + JSON.stringify(res))
     if (res.code === 200) {
       return res
     }
-
+    console.log('result code: ' + res.code)
     if (res.code === 400 || res.code === 401 || res.code === 402) {
-      MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-        confirmButtonText: 'Re-Login',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(() => {
-        store.dispatch('user/resetToken').then(() => {
-          location.reload()
-        })
-      })
+      store.dispatch('user/resetToken')
+      return Promise.reject(res.message)
     }
-    console.log('error msg: ' + res.message)
-    return Promise.reject(new Error(res.message || 'Error'))
+  }, error => {
+    console.log('err' + error) // for debug
+    return Promise.reject(error)
   }
 )
 
