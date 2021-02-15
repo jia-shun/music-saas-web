@@ -4,10 +4,33 @@
       <!-- 搜索与添加区域 -->
 
       <el-row :gutter="20">
+        <el-col :span="3">
+          <el-select v-model="queryInfo.payStatus" clearable placeholder="支付状态">
+            <el-option
+              v-for="item in payStatusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-col>
+
+        <el-col :span="3">
+          <el-select v-model="queryInfo.finishStatus" clearable placeholder="完成状态">
+            <el-option
+              v-for="item in finishStatusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-col>
         <el-col :span="5">
-          <el-input v-model="queryInfo.keyword" placeholder="请输入音乐或客户名字" clearable @clear="get">
-            <el-button slot="append" icon="el-icon-search" @click="get" />
-          </el-input>
+          <el-input v-model="queryInfo.keyword" placeholder="请输入音乐或客户名字" clearable @clear="get" />
+
+        </el-col>
+        <el-col :span="2">
+          <el-button type="primary" icon="el-icon-search" @click="get">搜索</el-button>
         </el-col>
         <el-col :span="2">
           <el-button type="primary" @click="addDialogVisible = true ">添加音乐</el-button>
@@ -21,22 +44,30 @@
         <el-table-column
           prop="musicName"
           label="音乐名字"
-          width="180"
         />
         <el-table-column
           prop="customerName"
           label="客户姓名"
-          width="180"
         />
         <el-table-column
           prop="price"
           label="费用"
+          width="100"
         />
+        <el-table-column label="支付状态" align="center" prop="payStatus">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.payStatus"
+              @change="changePayEnabled(scope.row, scope.row.payStatus)"
+            />
+          </template>
+
+        </el-table-column>
         <el-table-column label="完成状态" align="center" prop="finishStatus">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.finishStatus"
-              @change="changeEnabled(scope.row, scope.row.finishStatus)"
+              @change="changeFinishEnabled(scope.row, scope.row.finishStatus)"
             />
           </template>
         </el-table-column>
@@ -86,6 +117,9 @@
         <el-form-item label="制作费用" prop="price">
           <el-input v-model.number="addMusic.price" />
         </el-form-item>
+        <el-form-item label="支付状态" prop="payStatus">
+          <el-switch v-model="addMusic.payStatus" />
+        </el-form-item>
         <el-form-item label="制作周期">
           <el-col :span="11">
             <el-date-picker
@@ -134,6 +168,9 @@
         <el-form-item label="制作费用" prop="price">
           <el-input v-model.number="editMusic.price" />
         </el-form-item>
+        <el-form-item label="支付状态" prop="payStatus">
+          <el-switch v-model="editMusic.payStatus" />
+        </el-form-item>
         <el-form-item label="制作周期">
           <el-col :span="11">
             <el-date-picker
@@ -170,7 +207,7 @@
 </template>
 
 <script>
-import { get, add, editStatus, getById, edit, del } from '@/api/music'
+import { get, add, editFinishStatus, getById, edit, del, editPayStatus } from '@/api/music'
 export default {
   data() {
     var checkPrice = (rule, value, callback) => {
@@ -181,6 +218,20 @@ export default {
       }
     }
     return {
+      payStatusOptions: [{
+        value: 'TRUE',
+        label: '已支付'
+      }, {
+        value: 'FALSE',
+        label: '未支付'
+      }],
+      finishStatusOptions: [{
+        value: 'TRUE',
+        label: '已完成'
+      }, {
+        value: 'FALSE',
+        label: '未完成'
+      }],
       musics: [],
       total: 0,
       addDialogVisible: false,
@@ -189,6 +240,7 @@ export default {
         musicName: '',
         customerName: '',
         price: '',
+        payStatus: false,
         beganAt: '',
         finishedAt: '',
         finishStatus: false
@@ -210,12 +262,15 @@ export default {
         // 当前页数
         page: 1,
         pageSize: 10,
-        keyword: ''
+        keyword: '',
+        payStatus: '',
+        finishStatus: ''
       },
       addMusic: {
         musicName: '',
         customerName: '',
         price: '',
+        payStatus: false,
         beganAt: '',
         finishedAt: '',
         finishStatus: false
@@ -259,15 +314,36 @@ export default {
         })
       })
     },
+    // 改变支付状态
+    changePayEnabled(data, val) {
+      var status = val ? '已支付' : '未支付'
+      this.$confirm('确认音乐《 ' + data.musicName + ' 》支付状态修改为 ' + status + '？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        editPayStatus(data).then(res => {
+          this.$msg.notify({
+            content: '更新支付状态成功',
+            type: 'success'
+          })
+          this.get()
+        }).catch(() => {
+          data.payStatus = !data.payStatus
+        })
+      }).catch(() => {
+        data.payStatus = !data.payStatus
+      })
+    },
     // 改变状态
-    changeEnabled(data, val) {
+    changeFinishEnabled(data, val) {
       var status = val ? '已完成' : '未完成'
       this.$confirm('确认音乐《 ' + data.musicName + ' 》状态修改为 ' + status + '？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        editStatus(data).then(res => {
+        editFinishStatus(data).then(res => {
           this.$msg.notify({
             content: '更新完成状态成功',
             type: 'success'

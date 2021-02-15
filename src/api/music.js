@@ -38,12 +38,20 @@ export function edit(data) {
   })
 }
 
-export function editStatus(data) {
+export function editFinishStatus(data) {
   return request({
-    url: 'music/status',
+    url: 'music/finish-status',
     method: 'put',
     data
   })
 }
 
-export default { get, getById, add, edit, del, editStatus }
+export function editPayStatus(data) {
+  return request({
+    url: 'music/pay-status',
+    method: 'put',
+    data
+  })
+}
+
+export default { get, getById, add, edit, del, editFinishStatus, editPayStatus }

@@ -33,9 +33,7 @@ service.interceptors.response.use(
     console.log('result: ' + JSON.stringify(res))
     if (res.code === 200) {
       return res
-    }
-    console.log('result code: ' + res.code)
-    if (res.code === 400 || res.code === 401 || res.code === 402) {
+    } else {
       store.dispatch('user/resetToken')
       return Promise.reject(res.message)
     }
