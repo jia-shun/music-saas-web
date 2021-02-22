@@ -25,6 +25,16 @@
             />
           </el-select>
         </el-col>
+        <el-col :span="3">
+          <el-select v-model="queryInfo.orderKey" clearable placeholder="排序">
+            <el-option
+              v-for="item in orderOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-col>
         <el-col :span="5">
           <el-input v-model="queryInfo.keyword" placeholder="请输入音乐或客户名字" clearable @clear="get" />
 
@@ -232,6 +242,14 @@ export default {
         value: 'FALSE',
         label: '未完成'
       }],
+      orderOptions: [
+        {
+          value: 'finishedAt',
+          label: '完成时间'
+        }, {
+          value: 'beganAt',
+          label: '接手时间'
+        }],
       musics: [],
       total: 0,
       addDialogVisible: false,
@@ -264,7 +282,9 @@ export default {
         pageSize: 10,
         keyword: '',
         payStatus: '',
-        finishStatus: ''
+        finishStatus: '',
+        orderKey: '',
+        desc: true
       },
       addMusic: {
         musicName: '',
