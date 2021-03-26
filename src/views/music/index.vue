@@ -49,6 +49,7 @@
       <!-- 渲染列表 -->
       <el-table
         :data="musics"
+        border
         style="width: 100%"
       >
         <el-table-column
@@ -68,6 +69,8 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.payStatus"
+              active-color="#D1D1D1"
+              inactive-color="#F04134"
               @change="changePayEnabled(scope.row, scope.row.payStatus)"
             />
           </template>
@@ -77,17 +80,19 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.finishStatus"
+              active-color="#D1D1D1"
+              inactive-color="#F04134"
               @change="changeFinishEnabled(scope.row, scope.row.finishStatus)"
             />
           </template>
         </el-table-column>
         <el-table-column
-          prop="beganAt"
-          label="接手时间"
+          prop="finishedAt"
+          label="交付时间"
         />
         <el-table-column
-          prop="finishedAt"
-          label="完成时间"
+          prop="beganAt"
+          label="接手时间"
         />
         <el-table-column
           label="操作"
@@ -128,7 +133,18 @@
           <el-input v-model.number="addMusic.price" />
         </el-form-item>
         <el-form-item label="支付状态" prop="payStatus">
-          <el-switch v-model="addMusic.payStatus" />
+          <el-switch
+            v-model="addMusic.payStatus"
+            active-color="#D1D1D1"
+            inactive-color="#F04134"
+          />
+        </el-form-item>
+        <el-form-item label="完成状态" prop="finishStatus">
+          <el-switch
+            v-model="addMusic.finishStatus"
+            active-color="#D1D1D1"
+            inactive-color="#F04134"
+          />
         </el-form-item>
         <el-form-item label="制作周期">
           <el-col :span="11">
@@ -144,13 +160,10 @@
             <el-date-picker
               v-model="addMusic.finishedAt"
               type="datetime"
-              placeholder="完成时间"
+              placeholder="交付时间"
               style="width: 100%;"
             />
           </el-col>
-        </el-form-item>
-        <el-form-item label="完成状态" prop="finishStatus">
-          <el-switch v-model="addMusic.finishStatus" />
         </el-form-item>
       </el-form>
 
@@ -179,7 +192,18 @@
           <el-input v-model.number="editMusic.price" />
         </el-form-item>
         <el-form-item label="支付状态" prop="payStatus">
-          <el-switch v-model="editMusic.payStatus" />
+          <el-switch
+            v-model="editMusic.payStatus"
+            active-color="#D1D1D1"
+            inactive-color="#F04134"
+          />
+        </el-form-item>
+        <el-form-item label="完成状态" prop="finishStatus">
+          <el-switch
+            v-model="editMusic.finishStatus"
+            active-color="#D1D1D1"
+            inactive-color="#F04134"
+          />
         </el-form-item>
         <el-form-item label="制作周期">
           <el-col :span="11">
@@ -195,13 +219,10 @@
             <el-date-picker
               v-model="editMusic.finishedAt"
               type="datetime"
-              placeholder="完成时间"
+              placeholder="交付时间"
               style="width: 100%;"
             />
           </el-col>
-        </el-form-item>
-        <el-form-item label="完成状态" prop="finishStatus">
-          <el-switch v-model="editMusic.finishStatus" />
         </el-form-item>
       </el-form>
 
@@ -245,7 +266,7 @@ export default {
       orderOptions: [
         {
           value: 'finishedAt',
-          label: '完成时间'
+          label: '交付时间'
         }, {
           value: 'beganAt',
           label: '接手时间'
@@ -404,7 +425,7 @@ export default {
         }
         if (!this.addMusic.finishedAt || this.addMusic.finishedAt === '') {
           this.$msg.notify({
-            content: '完成时间不能为空',
+            content: '交付时间不能为空',
             type: 'warning'
           })
           return
@@ -439,7 +460,7 @@ export default {
         }
         if (!this.editMusic.finishedAt || this.editMusic.finishedAt === '') {
           this.$msg.notify({
-            content: '完成时间不能为空',
+            content: '交付时间不能为空',
             type: 'warning'
           })
           return
@@ -471,7 +492,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scope>
 .el-table {
     margin-top: 30px;
 }
@@ -482,5 +503,26 @@ export default {
     margin-right: 50px;
     margin-bottom: 20px;
 }
+
+/* .switchStyle .el-switch__label {
+  position: absolute;
+  display: none;
+  color: #fff;
+}
+.switchStyle .el-switch__label--right {
+  z-index: 1;
+  right: 2px;
+}
+.switchStyle .el-switch__label--left {
+  z-index: 1;
+  left: 10px;
+}
+.switchStyle .el-switch__label.is-active {
+  display: block;
+}
+.switchStyle.el-switch .el-switch__core,
+.el-switch .el-switch__label {
+  width: 50px !important;
+} */
 
 </style>
