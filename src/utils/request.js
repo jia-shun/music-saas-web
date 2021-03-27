@@ -34,7 +34,6 @@ service.interceptors.response.use(
     if (res.code === 200) {
       return res
     } else {
-      store.dispatch('user/resetToken')
       return Promise.reject(res.message)
     }
   }, error => {

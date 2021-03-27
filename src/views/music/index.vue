@@ -61,21 +61,9 @@
           label="客户姓名"
         />
         <el-table-column
-          prop="price"
-          label="费用"
-          width="100"
+          prop="finishedAt"
+          label="交付时间"
         />
-        <el-table-column label="支付状态" align="center" prop="payStatus">
-          <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.payStatus"
-              active-color="#D1D1D1"
-              inactive-color="#F04134"
-              @change="changePayEnabled(scope.row, scope.row.payStatus)"
-            />
-          </template>
-
-        </el-table-column>
         <el-table-column label="完成状态" align="center" prop="finishStatus">
           <template slot-scope="scope">
             <el-switch
@@ -86,9 +74,20 @@
             />
           </template>
         </el-table-column>
+        <el-table-column label="支付状态" align="center" prop="payStatus">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.payStatus"
+              active-color="#D1D1D1"
+              inactive-color="#F04134"
+              @change="changePayEnabled(scope.row, scope.row.payStatus)"
+            />
+          </template>
+        </el-table-column>
         <el-table-column
-          prop="finishedAt"
-          label="交付时间"
+          prop="price"
+          label="费用"
+          width="100"
         />
         <el-table-column
           prop="beganAt"
@@ -265,8 +264,8 @@ export default {
       }],
       orderOptions: [
         {
-          value: 'finishedAt',
-          label: '交付时间'
+          value: 'createdAt',
+          label: '创建时间'
         }, {
           value: 'beganAt',
           label: '接手时间'
