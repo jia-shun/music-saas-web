@@ -347,10 +347,6 @@ export default {
         type: 'warning'
       }).then(() => {
         del(data.id).then(res => {
-          this.$msg.notify({
-            content: '删除成功',
-            type: 'success'
-          })
           this.get()
         })
       })
@@ -364,10 +360,6 @@ export default {
         type: 'warning'
       }).then(() => {
         editPayStatus(data).then(res => {
-          this.$msg.notify({
-            content: '更新支付状态成功',
-            type: 'success'
-          })
           this.get()
         }).catch(() => {
           data.payStatus = !data.payStatus
@@ -385,10 +377,6 @@ export default {
         type: 'warning'
       }).then(() => {
         editFinishStatus(data).then(res => {
-          this.$msg.notify({
-            content: '更新完成状态成功',
-            type: 'success'
-          })
           this.get()
         }).catch(() => {
           data.finishStatus = !data.finishStatus
@@ -434,10 +422,6 @@ export default {
         add(this.addMusic).then(res => {
           this.addDialogVisible = false
           this.get()
-          this.$msg.notify({
-            content: '添加音乐成功',
-            type: 'success'
-          })
         }).catch(err => {
           this.$msg.notify({
             content: err.message,
@@ -469,10 +453,6 @@ export default {
         edit(this.editMusic).then(res => {
           this.editDialogVisible = false
           this.get()
-          this.$msg.notify({
-            content: '编辑音乐成功',
-            type: 'success'
-          })
         }).catch(err => {
           this.$msg.notify({
             content: err.message,
